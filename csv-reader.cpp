@@ -42,7 +42,7 @@ std::vector<std::string> CSV_Reader::GenerateCols(std::string line)
 
     for (int i = 0; i < line.length(); i++) {
         if (!escaping) {
-            if (line.at(i) != DOUBLE_QUOTE_CHAR || line.at(i) != COMMA_CHAR) {
+            if (line.at(i) != DOUBLE_QUOTE_CHAR && line.at(i) != COMMA_CHAR) {
                 // Append to collected
                 currentCollected += line.at(i);
             } else if (line.at(i) == DOUBLE_QUOTE_CHAR) {

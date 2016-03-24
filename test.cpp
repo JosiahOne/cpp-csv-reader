@@ -7,8 +7,8 @@ int main()
     CSV_Reader *reader = new CSV_Reader("test.csv");
     reader->LoadFile();
     
-    for (int i = 0; i < reader->numRows; i++) {
-        for (int j = 0; j < reader->numCols; j++) {
+    for (int i = 0; i < reader->getNumRows(); i++) {
+        for (int j = 0; j < reader->getNumCols(); j++) {
             std::cout << reader->rows[i][j];
         }
 

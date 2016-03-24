@@ -41,6 +41,50 @@ int CSV_Reader::getNumCols()
 	return this->numCols;
 }
 
+/*
+ * This function locates the index of the *first* matching value container.
+ * Searches rows between: startRow and endRow and
+ * Columns between: startCol and endCol.
+ * 
+ * Negatives values for the indices indicate no value. i.e. startRow == -1 implies startRow = 0 and
+ * endRow == -1 implies endRow = LAST_ROW_INDEX
+ */
+LocationIndex CSV_Reader::findString(std::string value, int startRow, int endRow, int startCol, int endCol)
+{
+	if (startRow < 0) {
+		startRow = 0;
+	}
+
+	if (endRow < 0) {
+		endRow = this->getNumRows() - 1;
+	}
+
+	if (startCol < 0) {
+		startCol = 0;
+	}
+
+	if (endCol < 0) {
+		endCol = this->getNumCols() - 1;
+	}
+
+	// Search
+
+	LocationIndex index;
+	index.valid = false;
+
+	for (int i = startRow; i <= endRow; i++) {
+		for (int j = startCol; j <= endCol; j++) {
+			if (this->rows[i][j] == value) {
+				index.row = i;
+				index.col = j;
+				index.valid = true;
+			}
+		}
+	}
+
+	return index;
+}
+
 std::vector<std::string> CSV_Reader::GenerateCols(std::string line)
 {
     char DOUBLE_QUOTE_CHAR = 34;

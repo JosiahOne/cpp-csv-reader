@@ -10,6 +10,12 @@
 #include <string>
 #include <vector>
 
+struct LocationIndex {
+	int row;
+	int col;
+	bool valid;
+};
+
 class CSV_Reader
 {
 private:
@@ -27,4 +33,5 @@ public:
     bool LoadFile();
 	int getNumRows();
 	int getNumCols();
+	LocationIndex findString(std::string value, int startRow, int endRow, int startCol, int endCol);
 };

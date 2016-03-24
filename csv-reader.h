@@ -14,15 +14,17 @@ class CSV_Reader
 {
 private:
     std::string fileLoc;
+	int numRows;
+	int numCols;
 
     std::vector<std::string> GenerateCols(std::string line);
-
 public:
-    int numRows;
-    int numCols;
+
     std::vector< std::vector<std::string> > rows;  
     
     CSV_Reader(std::string aFileLoc);
     ~CSV_Reader();
     bool LoadFile();
+	int getNumRows();
+	int getNumCols();
 };

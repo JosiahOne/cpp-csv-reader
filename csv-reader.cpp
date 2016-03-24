@@ -31,6 +31,16 @@ bool CSV_Reader::LoadFile()
     return true;
 }
 
+int CSV_Reader::getNumRows()
+{
+	return this->numRows;
+}
+
+int CSV_Reader::getNumCols()
+{
+	return this->numCols;
+}
+
 std::vector<std::string> CSV_Reader::GenerateCols(std::string line)
 {
     char DOUBLE_QUOTE_CHAR = 34;

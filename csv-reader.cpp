@@ -85,6 +85,11 @@ LocationIndex CSV_Reader::findString(std::string value, int startRow, int endRow
 	return index;
 }
 
+LocationIndex CSV_Reader::findString(std::string value)
+{
+	return findString(value, -1, -1, -1, -1);
+}
+
 std::vector<std::string> CSV_Reader::GenerateCols(std::string line)
 {
     char DOUBLE_QUOTE_CHAR = 34;

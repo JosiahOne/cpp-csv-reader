@@ -34,4 +34,5 @@ public:
 	int getNumRows();
 	int getNumCols();
 	LocationIndex findString(std::string value, int startRow, int endRow, int startCol, int endCol);
+	LocationIndex findString(std::string value);
 };

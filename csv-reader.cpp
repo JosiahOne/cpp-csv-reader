@@ -1,5 +1,6 @@
 #include "csv-reader.h"
 #include <fstream>
+#include <sstream>
 
 CSV_Reader::CSV_Reader(std::string aFileLoc)
 {
@@ -8,7 +9,7 @@ CSV_Reader::CSV_Reader(std::string aFileLoc)
 
 CSV_Reader::~CSV_Reader()
 {
-    
+
 }
 
 bool CSV_Reader::LoadFile()
@@ -18,11 +19,12 @@ bool CSV_Reader::LoadFile()
     } else {
         std::ifstream mainFile;
         mainFile.open(fileLoc.c_str());
-        
-        std::string line;
-        while (getline(mainFile, line)) {
-           rows.push_back(GenerateCols(line));
-        }
+
+        std::stringstream strStream;
+        strStream << mainFile.rdbuf(); //read the file
+        std::string data = strStream.str(); //str holds the content of the file
+
+        GenerateCols(data);
 
         mainFile.close();
         numRows = rows.size();
@@ -45,7 +47,7 @@ int CSV_Reader::getNumCols()
  * This function locates the index of the *first* matching value container.
  * Searches rows between: startRow and endRow and
  * Columns between: startCol and endCol.
- * 
+ *
  * Negatives values for the indices indicate no value. i.e. startRow == -1 implies startRow = 0 and
  * endRow == -1 implies endRow = LAST_ROW_INDEX
  */
@@ -90,47 +92,53 @@ LocationIndex CSV_Reader::findString(std::string value)
 	return findString(value, -1, -1, -1, -1);
 }
 
-std::vector<std::string> CSV_Reader::GenerateCols(std::string line)
+bool CSV_Reader::GenerateCols(std::string data)
 {
     char DOUBLE_QUOTE_CHAR = 34;
     char COMMA_CHAR = 44;
+    char END_LINE = '\n';
 
-    std::vector<std::string> cols;
+    std::vector< std::string > col;
     std::string currentCollected = "";
     bool escaping = false;
 
-    for (unsigned int i = 0; i < line.length(); i++) {
-        if (!escaping) {
-            if (line.at(i) != DOUBLE_QUOTE_CHAR && line.at(i) != COMMA_CHAR) {
-                // Append to collected
-                currentCollected += line.at(i);
-            } else if (line.at(i) == DOUBLE_QUOTE_CHAR) {
-                escaping = true;
-            } else if (line.at(i) == COMMA_CHAR) {
-                // Write out current data
-                cols.push_back(currentCollected);
-                currentCollected = "";
-            }
+    for (unsigned int i = 0; i < data.length(); i++) {
+      char currentChar = data.at(i);
+
+      if ((currentChar != END_LINE && currentChar != DOUBLE_QUOTE_CHAR && currentChar != COMMA_CHAR)
+          || (currentChar == COMMA_CHAR && escaping)
+          || (currentChar == END_LINE && escaping)) {
+        currentCollected += currentChar;
+      } else if ((currentChar == END_LINE && !escaping)) {
+        // End of row.
+        // If we didn't write out data already, write out the remainder.
+        col.push_back(currentCollected);
+        numCols = col.size();
+        rows.push_back(col);
+        col.clear();
+        currentCollected = "";
+      } else if (currentChar == COMMA_CHAR && !escaping) {
+        // End of cell.
+        col.push_back(currentCollected);
+        currentCollected = "";
+      } else if (currentChar == DOUBLE_QUOTE_CHAR && !escaping) {
+        // We need to start escaping.
+        escaping = true;
+      } else if (currentChar == DOUBLE_QUOTE_CHAR && escaping) {
+        // If the next char is also a DOUBLE_QUOTE_CHAR, then we want to push a DOUBLE_QUOTE_CHAR.
+        if (i < data.length() - 1 && data.at(i+1) == DOUBLE_QUOTE_CHAR) {
+          currentCollected += currentChar;
         } else {
-            if (line.at(i) != DOUBLE_QUOTE_CHAR) {
-                currentCollected += line.at(i);
-            } else {
-                if (line.at(i + 1) == DOUBLE_QUOTE_CHAR) {
-                    // Escape
-                    currentCollected += line.at(i);
-                    i++; // Skip next char
-                } else {
-                    escaping = false;
-                }
-            }
+          // If not, then this is the end of the escaping period.
+          escaping = false;
         }
+      }
     }
 
-    // If we didn't write out data already, write out the remainder.
-    if (currentCollected != "") {
-        cols.push_back(currentCollected);
+    if (col.size() != 0) {
+      col.push_back(currentCollected);
+      rows.push_back(col);
     }
-    
-    numCols = cols.size();
-    return cols;    
+
+    return true;
 }

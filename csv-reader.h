@@ -23,14 +23,14 @@ private:
 	int numRows;
 	int numCols;
 
-    std::vector<std::string> GenerateCols(std::string line);
+  bool GenerateCols(std::string data);
 public:
 
-    std::vector< std::vector<std::string> > rows;  
-    
-    CSV_Reader(std::string aFileLoc);
-    ~CSV_Reader();
-    bool LoadFile();
+  std::vector< std::vector<std::string> > rows;
+
+  CSV_Reader(std::string aFileLoc);
+  ~CSV_Reader();
+  bool LoadFile();
 	int getNumRows();
 	int getNumCols();
 	LocationIndex findString(std::string value, int startRow, int endRow, int startCol, int endCol);

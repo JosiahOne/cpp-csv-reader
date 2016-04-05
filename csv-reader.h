@@ -11,28 +11,28 @@
 #include <vector>
 
 struct LocationIndex {
-	int row;
-	int col;
-	bool valid;
+    int row;
+    int col;
+    bool valid;
 };
 
 class CSV_Reader
 {
 private:
     std::string fileLoc;
-	int numRows;
-	int numCols;
+    int numRows;
+    int numCols;
 
-  bool GenerateCols(std::string data);
+    bool GenerateCols(std::string data);
 public:
 
-  std::vector< std::vector<std::string> > rows;
+    std::vector< std::vector<std::string> > rows;
 
-  CSV_Reader(std::string aFileLoc);
-  ~CSV_Reader();
-  bool LoadFile();
+    CSV_Reader(std::string aFileLoc);
+    ~CSV_Reader();
+	bool LoadFile();
 	int getNumRows();
-	int getNumCols();
-	LocationIndex findString(std::string value, int startRow, int endRow, int startCol, int endCol);
-	LocationIndex findString(std::string value);
+    int getNumCols();
+    LocationIndex findString(std::string value, int startRow, int endRow, int startCol, int endCol);
+    LocationIndex findString(std::string value);
 };

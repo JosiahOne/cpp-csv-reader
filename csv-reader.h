@@ -16,23 +16,23 @@ struct LocationIndex {
     bool valid;
 };
 
-class CSV_Reader
+class CSVReader
 {
 private:
-    std::string fileLoc;
-    int numRows;
-    int numCols;
+    std::string file_loc_;
+    int num_rows_;
+    int num_cols_;
 
     bool GenerateCols(std::string data);
 public:
 
     std::vector< std::vector<std::string> > rows;
 
-    CSV_Reader(std::string aFileLoc);
-    ~CSV_Reader();
+    CSVReader(std::string file_loc);
+    ~CSVReader();
 	bool LoadFile();
-	int getNumRows();
-    int getNumCols();
-    LocationIndex findString(std::string value, int startRow, int endRow, int startCol, int endCol);
-    LocationIndex findString(std::string value);
+	int get_num_rows();
+    int get_num_cols();
+    LocationIndex FindString(std::string value, int start_row, int end_row, int start_col, int end_col);
+    LocationIndex FindString(std::string value);
 };

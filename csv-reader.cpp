@@ -2,23 +2,23 @@
 #include <fstream>
 #include <sstream>
 
-CSV_Reader::CSV_Reader(std::string aFileLoc)
+CSVReader::CSVReader(std::string file_loc)
 {
-    fileLoc = aFileLoc;
+    file_loc_ = file_loc;
 }
 
-CSV_Reader::~CSV_Reader()
+CSVReader::~CSVReader()
 {
 
 }
 
-bool CSV_Reader::LoadFile()
+bool CSVReader::LoadFile()
 {
-    if (fileLoc == "") {
+    if (file_loc_ == "") {
         return false;
     } else {
         std::ifstream mainFile;
-        mainFile.open(fileLoc.c_str());
+        mainFile.open(file_loc_.c_str());
 
         std::stringstream strStream;
         strStream << mainFile.rdbuf(); //read the file
@@ -27,46 +27,46 @@ bool CSV_Reader::LoadFile()
         GenerateCols(data);
 
         mainFile.close();
-        numRows = rows.size();
+        num_rows_ = rows.size();
     }
 
     return true;
 }
 
-int CSV_Reader::getNumRows()
+int CSVReader::get_num_rows()
 {
-	return this->numRows;
+	return this->num_rows_;
 }
 
-int CSV_Reader::getNumCols()
+int CSVReader::get_num_cols()
 {
-	return this->numCols;
+	return this->num_cols_;
 }
 
 /*
  * This function locates the index of the *first* matching value container.
- * Searches rows between: startRow and endRow and
- * Columns between: startCol and endCol.
+ * Searches rows between: start_row and end_row and
+ * Columns between: start_col and end_col.
  *
- * Negatives values for the indices indicate no value. i.e. startRow == -1 implies startRow = 0 and
- * endRow == -1 implies endRow = LAST_ROW_INDEX
+ * Negatives values for the indices indicate no value. i.e. start_row == -1 implies start_row = 0 and
+ * end_row == -1 implies end_row = LAST_ROW_INDEX
  */
-LocationIndex CSV_Reader::findString(std::string value, int startRow, int endRow, int startCol, int endCol)
+LocationIndex CSVReader::FindString(std::string value, int start_row, int end_row, int start_col, int end_col)
 {
-	if (startRow < 0) {
-		startRow = 0;
+	if (start_row < 0) {
+        start_row = 0;
 	}
 
-	if (endRow < 0) {
-		endRow = this->getNumRows() - 1;
+	if (end_row < 0) {
+        end_row = this->get_num_rows() - 1;
 	}
 
-	if (startCol < 0) {
-		startCol = 0;
+	if (start_col < 0) {
+        start_col = 0;
 	}
 
-	if (endCol < 0) {
-		endCol = this->getNumCols() - 1;
+	if (end_col < 0) {
+        end_col = this->get_num_cols() - 1;
 	}
 
 	// Search
@@ -74,8 +74,8 @@ LocationIndex CSV_Reader::findString(std::string value, int startRow, int endRow
 	LocationIndex index;
 	index.valid = false;
 
-	for (int i = startRow; i <= endRow; i++) {
-		for (int j = startCol; j <= endCol; j++) {
+	for (int i = start_row; i <= end_row; i++) {
+		for (int j = start_col; j <= end_col; j++) {
 			if (this->rows[i][j] == value) {
 				index.row = i;
 				index.col = j;
@@ -87,12 +87,12 @@ LocationIndex CSV_Reader::findString(std::string value, int startRow, int endRow
 	return index;
 }
 
-LocationIndex CSV_Reader::findString(std::string value)
+LocationIndex CSVReader::FindString(std::string value)
 {
-	return findString(value, -1, -1, -1, -1);
+	return FindString(value, -1, -1, -1, -1);
 }
 
-bool CSV_Reader::GenerateCols(std::string data)
+bool CSVReader::GenerateCols(std::string data)
 {
     char DOUBLE_QUOTE_CHAR = 34;
     char COMMA_CHAR = 44;
@@ -113,7 +113,7 @@ bool CSV_Reader::GenerateCols(std::string data)
         // End of row.
         // If we didn't write out data already, write out the remainder.
         col.push_back(currentCollected);
-        numCols = col.size();
+        num_cols_ = col.size();
         rows.push_back(col);
         col.clear();
         currentCollected = "";

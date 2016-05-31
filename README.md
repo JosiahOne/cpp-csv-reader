@@ -3,8 +3,8 @@ A very simplisitic .CSV file reader. It reads in the file and allows you to acce
 
 ## Example
 
-    CSV_Reader *reader = new CSV_Reader("test.csv");
-    reader->LoadFile();
+    CSV_Reader reader("test.csv");
+    reader.LoadFile();
 
     for (int i = 0; i < reader->getNumRows(); i++) {
         for (int j = 0; j < reader->getNumCols(); j++) {
@@ -14,4 +14,3 @@ A very simplisitic .CSV file reader. It reads in the file and allows you to acce
         std::cout << "\n";
 
     }
-    delete reader;

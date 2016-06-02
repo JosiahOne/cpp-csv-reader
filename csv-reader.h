@@ -22,7 +22,7 @@ private:
     std::string file_loc_;
     int num_rows_;
     int num_cols_;
-
+    bool perserve_double_quotes_;
     bool GenerateCols(std::string data);
 public:
 
@@ -30,8 +30,8 @@ public:
 
     CSVReader(std::string file_loc);
     ~CSVReader();
-	bool LoadFile();
-	int get_num_rows();
+  	bool LoadFile(bool perserve_double_quotes = false);
+    int get_num_rows();
     int get_num_cols();
     LocationIndex FindString(std::string value, int start_row, int end_row, int start_col, int end_col);
     LocationIndex FindString(std::string value);

@@ -12,8 +12,10 @@ CSVReader::~CSVReader()
 
 }
 
-bool CSVReader::LoadFile()
+bool CSVReader::LoadFile(bool perserve_double_quotes)
 {
+    perserve_double_quotes_ = perserve_double_quotes;
+
     if (file_loc_ == "") {
         return false;
     } else {
@@ -130,6 +132,9 @@ bool CSVReader::GenerateCols(std::string data)
         // If the next char is also a DOUBLE_QUOTE_CHAR, then we want to push a DOUBLE_QUOTE_CHAR.
         if (i < data.length() - 1 && data.at(i+1) == DOUBLE_QUOTE_CHAR) {
           currentCollected += currentChar;
+          if (perserve_double_quotes_) {
+            currentCollected += currentChar;
+          }
           i++; // Skip next quote char.
         } else {
           // If not, then this is the end of the escaping period.

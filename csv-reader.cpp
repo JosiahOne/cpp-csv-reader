@@ -124,6 +124,8 @@ bool CSVReader::GenerateCols(std::string data)
       } else if (currentChar == DOUBLE_QUOTE_CHAR && !escaping) {
         // We need to start escaping.
         escaping = true;
+
+        currentCollected += currentChar;
       } else if (currentChar == DOUBLE_QUOTE_CHAR && escaping) {
         // If the next char is also a DOUBLE_QUOTE_CHAR, then we want to push a DOUBLE_QUOTE_CHAR.
         if (i < data.length() - 1 && data.at(i+1) == DOUBLE_QUOTE_CHAR) {
@@ -132,6 +134,8 @@ bool CSVReader::GenerateCols(std::string data)
         } else {
           // If not, then this is the end of the escaping period.
           escaping = false;
+        
+          currentCollected += currentChar;
         }
       }
     }
